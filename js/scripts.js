@@ -93,22 +93,21 @@ Board.prototype.changeTurn = function(){
 
 ////////////// UI /////////////////////
 $(document).ready(function(){
-  //$("#board").hide();
   var board = new Board();
+  $("#playArea").hide();
+
   $("#p-v-p").click(function() {
+    board.players = [];
     makePlayer(board);
     makePlayer(board);
     $("#p1-type").text(board.players[0].name);
     $("#p2-type").text(board.players[1].name);
 
-    $(".col").removeClass("p1");
-    $(".col").removeClass("p2");
-    board.initBoard();
+    resetPlay(board);
+
     $("#play-mode").fadeOut("slow");
     $("#scores").fadeIn("slow");
-    $("#board").fadeIn("slow");
-
-    showActivePlayer(board);
+    $("#playArea").fadeIn("slow");
   });
 
   $(".col-choice").click(function(){
@@ -124,16 +123,43 @@ $(document).ready(function(){
       board.changeTurn();
       showActivePlayer(board);
     } else {
+      $("#p1-score").text(board.players[0].score);
+      $("#p2-score").text(board.players[1].score);
       alert("WINNER! " + board.players[board.turn].name);
       $(".col-choice").hide();
+      $("#rematch").show();
       $("#play-mode").fadeIn("slow");
     }
   });
+
+  $("#rage").click(function(){
+    resetPlay(board);
+    $("#playArea").hide();
+    $("#play-mode").fadeIn("slow");
+    board.players = [];
+  });
+
+  $("#rematch").click(function(){
+    resetPlay(board);
+    $("#rematch").hide();
+    $("#play-mode").fadeOut("slow");
+  });
 });
+
+function resetPlay(board){
+  $(".col-choice").show();
+  $(".col").removeClass("p1");
+  $(".col").removeClass("p2");
+  board.initBoard();
+  showActivePlayer(board);
+  $("#p1-score").text(board.players[0].score);
+  $("#p2-score").text(board.players[1].score);
+}
 
 function checkForWin(board, col, row){
   var win = false;
   if(board.checkWinHorz(row) || board.checkWinVert(col)){
+    board.players[board.turn].score++;
     win = true;
   }
   if(board.movesLeft === 0 && !win){

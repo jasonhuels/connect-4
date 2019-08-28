@@ -36,12 +36,12 @@
 #scores p{
   display: inline-block;
   text-align: center;
+  margin: 0 20px;
 }
 
 #scores {
   display: none;
   color: grey;
-
 }
 #playArea {
   display: flex;
@@ -57,9 +57,9 @@
 
 }
 
-#p2 {
+/* #p2 {
   float: right;
-}
+} */
 
 .active {
   font-size: 25px;
