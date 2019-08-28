@@ -1,0 +1,30 @@
+.row {
+  width: 80%;
+  height: 100px;
+}
+
+.col {
+  height: inherit;
+  border: 2px solid black;
+  padding: 0;
+}
+
+#btns .col{
+  border: none;
+}
+
+.col-choice {
+  font-size: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: inherit;
+  margin-top: 80%;
+}
+
+.p1 {
+  background-color: blue;
+}
+
+.p2 {
+  background-color: red;
+}

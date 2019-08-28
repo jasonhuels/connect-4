@@ -29,7 +29,15 @@ _Connect 4 Game based off of Milton Bradley board game_
 |The program resets player scores when a player mode is selected | 2 Player mode selected | Displays score = 0 for Player 1 and score = 0 for Player 2, *empty board appears*|
 
 ** AI Specs Below
+| Behavior | Input | Output|
+|:------|:---------:|:------:|
+|The program AI randomly selects a column to place its piece | AI turn | Places piece in column x |
+|The program AI selects the middle column if it is the first piece on the board | AI turn | Places piece in column 4 |
 
+
+** Add ons
+* Media query to change col/row sizing
+* Hover text on col button to show how many available rows are left
 ## Setup/Installation Requirements
 
 * _This is a great place_
