@@ -81,7 +81,77 @@ Board.prototype.checkWinHorz = function(row){
     return win;
 }
 
-// TODO: Add diagonal win condition check
+// Diagonal win condition check
+/*
+  y1 = x + a
+  y2 = -x + b
+
+  row = col + a
+  row = -col + b
+
+  a = row - col
+  b = row + col
+
+  y1 = [0-5] + a
+  y2 = -[0-5] + b
+
+  y1 -> [0-6] keep
+  y2 -> [0-6] keep
+
+*/
+Board.prototype.checkWinDiag = function(x, y){
+  var arrayDiagPos = [];
+  var arrayDiagNeg = [];
+  var countPos = 0;
+  var countNeg = 0;
+  var win = false;
+
+  var a = y - x;
+  var b = y + x;
+
+  for(var col = 0; col <=6; col++){
+    var newRowPos = col + a;
+    var newRowNeg = -col + b;
+    if(newRowPos <=5 && newRowPos >= 0){
+      arrayDiagPos.push([col,newRowPos]);
+    }
+    if(newRowNeg <=5 && newRowNeg >= 0){
+      arrayDiagNeg.push([col,newRowNeg]);
+    }
+  }
+  console.log("Arrays", arrayDiagNeg, arrayDiagPos);
+  if(arrayDiagPos.length >= 4 ){
+    countPos = checkBoardCoord(this, arrayDiagPos);
+  }
+
+  if(arrayDiagNeg.length >= 4 ){
+    countNeg = checkBoardCoord(this, arrayDiagNeg);
+  }
+  if(countNeg >= 4 || countPos >= 4){
+    win = true;
+  }
+  console.log("Returned val: " + win);
+  return win;
+}
+
+function checkBoardCoord(board, arrayToCheck){
+  var count = 0;
+  for(var i = 0; i < arrayToCheck.length; i++){
+    var checkX = arrayToCheck[i][0];
+    var checkY = arrayToCheck[i][1];
+    var content = board.board[checkY][checkX];
+    //if(content === 0 || content === 1){
+      if(content === board.turn){
+        count++;
+        console.log(count, checkX, checkY);
+      }
+      else {
+        count = 0;
+      }
+    //}
+  }
+  return count;
+}
 
 Board.prototype.changeTurn = function(){
   if(this.turn === 0){
@@ -128,6 +198,7 @@ $(document).ready(function(){
       alert("WINNER! " + board.players[board.turn].name);
       $(".col-choice").hide();
       $("#rematch").show();
+      $("#rage").hide();
       $("#play-mode").fadeIn("slow");
     }
   });
@@ -158,7 +229,7 @@ function resetPlay(board){
 
 function checkForWin(board, col, row){
   var win = false;
-  if(board.checkWinHorz(row) || board.checkWinVert(col)){
+  if(board.checkWinHorz(row) || board.checkWinVert(col) || board.checkWinDiag(col, row)){
     board.players[board.turn].score++;
     win = true;
   }
