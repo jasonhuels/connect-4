@@ -32,3 +32,28 @@
 #rematch {
   display: none;
 }
+
+#scores p{
+  display: inline-block;
+  text-align: center;
+}
+
+#scores {
+  display: none;
+  color: grey;
+
+}
+
+#board {
+  display: none;
+}
+
+#p2 {
+  float: right;
+}
+
+.active {
+  font-size: 25px;
+  font-weight: bold;
+  text-decoration: overline underline;
+}

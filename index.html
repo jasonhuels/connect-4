@@ -8,94 +8,95 @@
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
-    <h1>Play Connect 4!</h1>
     <div class="container">
-      <div class="play-mode">
+      <h1>Play Connect 4!</h1>
+      <div id="play-mode">
+        <h3>Select the player mode:</h3>
         <button id="p-v-c" type="button" name="button" title="Player vs Computer">1 Player</button>
         <button id="p-v-p" type="button" name="button" title="Player vs Player">2 Player</button>
         <button id="rematch" type="button" name="button" title="Play Again, Settle the Score!">Rematch!</button>
       </div>
-      <div class="scores">
-        <p>Player 1: <span id="p1-score"></span></p>
-        <p><span id="p2-type">Player 2</span>: <span id="p2-score"></span></p>
+      <div id="scores">
+        <p id="p1"><span id="p1-type">Player 1</span>: <span id="p1-score"></span></p>
+        <p id="p2"><span id="p2-type">Player 2</span>: <span id="p2-score"></span></p>
       </div>
-      <div class="board">
+      <div id="board">
         <div class="row" id="btns">
-          <div class="col one">
+          <div class="col 0">
             <button class="col-choice" type="button" name="button">Select</button>
           </div>
-          <div class="col two">
+          <div class="col 1">
             <button class="col-choice" type="button" name="button">Select</button>
           </div>
-          <div class="col three">
+          <div class="col 2">
             <button class="col-choice" type="button" name="button">Select</button>
           </div>
-          <div class="col four">
+          <div class="col 3">
             <button class="col-choice" type="button" name="button">Select</button>
           </div>
-          <div class="col five">
+          <div class="col 4">
             <button class="col-choice" type="button" name="button">Select</button>
           </div>
-          <div class="col six">
+          <div class="col 5">
             <button class="col-choice" type="button" name="button">Select</button>
           </div>
-          <div class="col seven">
+          <div class="col 6">
             <button class="col-choice" type="button" name="button">Select</button>
           </div>
         </div>
         <div class="row" id="5">
-          <div class="col zero"></div>
-          <div class="col one"></div>
-          <div class="col two"></div>
-          <div class="col three"></div>
-          <div class="col four"></div>
-          <div class="col five"></div>
-          <div class="col six"></div>
+          <div class="col 0"></div>
+          <div class="col 1"></div>
+          <div class="col 2"></div>
+          <div class="col 3"></div>
+          <div class="col 4"></div>
+          <div class="col 5"></div>
+          <div class="col 6"></div>
         </div>
         <div class="row" id="4">
-          <div class="col zero"></div>
-          <div class="col one"></div>
-          <div class="col two"></div>
-          <div class="col three"></div>
-          <div class="col four"></div>
-          <div class="col five"></div>
-          <div class="col six"></div>
+          <div class="col 0"></div>
+          <div class="col 1"></div>
+          <div class="col 2"></div>
+          <div class="col 3"></div>
+          <div class="col 4"></div>
+          <div class="col 5"></div>
+          <div class="col 6"></div>
         </div>
         <div class="row" id="3">
-          <div class="col zero"></div>
-          <div class="col one"></div>
-          <div class="col two"></div>
-          <div class="col three"></div>
-          <div class="col four"></div>
-          <div class="col five"></div>
-          <div class="col six"></div>
+          <div class="col 0"></div>
+          <div class="col 1"></div>
+          <div class="col 2"></div>
+          <div class="col 3"></div>
+          <div class="col 4"></div>
+          <div class="col 5"></div>
+          <div class="col 6"></div>
         </div>
         <div class="row" id="2">
-          <div class="col zero"></div>
-          <div class="col one"></div>
-          <div class="col two"></div>
-          <div class="col three"></div>
-          <div class="col four"></div>
-          <div class="col five"></div>
-          <div class="col six"></div>
+          <div class="col 0"></div>
+          <div class="col 1"></div>
+          <div class="col 2"></div>
+          <div class="col 3"></div>
+          <div class="col 4"></div>
+          <div class="col 5"></div>
+          <div class="col 6"></div>
         </div>
         <div class="row" id="1">
-          <div class="col zero"></div>
-          <div class="col one"></div>
-          <div class="col two"></div>
-          <div class="col three"></div>
-          <div class="col four"></div>
-          <div class="col five"></div>
-          <div class="col six"></div>
+          <div class="col 0"></div>
+          <div class="col 1"></div>
+          <div class="col 2"></div>
+          <div class="col 3"></div>
+          <div class="col 4"></div>
+          <div class="col 5"></div>
+          <div class="col 6"></div>
         </div>
         <div class="row" id="0">
-          <div class="col zero"></div>
-          <div class="col one"></div>
-          <div class="col two"></div>
-          <div class="col three"></div>
-          <div class="col four"></div>
-          <div class="col five"></div>
-          <div class="col six"></div>
+          <div class="col 0"></div>
+          <div class="col 1"></div>
+          <div class="col 2"></div>
+          <div class="col 3"></div>
+          <div class="col 4"></div>
+          <div class="col 5"></div>
+          <div class="col 6"></div>
         </div>
       </div>
     </div>
