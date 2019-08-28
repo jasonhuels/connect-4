@@ -24,16 +24,16 @@ Board.prototype.initBoard = function() {
 }
 
 Board.prototype.updateBoard = function(col) {
-  var output = false;
+  var endRow = -1;
   for(let row=0;row<=5; row++){
     if(!(this.board[row][col] === 0 || this.board[row][col] === 1)){
       this.board[row][col] = this.turn;
-      output = true;
       this.movesLeft--;
+      endRow = row;
       break;
     }
   }
-  return output;
+  return endRow;
 }
 
 // refactor following 2 methods into 1
@@ -93,6 +93,7 @@ Board.prototype.changeTurn = function(){
 
 ////////////// UI /////////////////////
 $(document).ready(function(){
+  //$("#board").hide();
   var board = new Board();
   $("#p-v-p").click(function() {
     makePlayer(board);
@@ -114,23 +115,37 @@ $(document).ready(function(){
     //var locations = ["zero", "one", "two", "three", "four", "five", "six"];
     var colNum = parseInt($(this).parent().attr("class").split(" ")[1]);
     //var colNum = locations.indexOf(colString);
-    board.updateBoard(colNum);
-    colorBoard(board, colNum);
-    board.changeTurn();
-    showActivePlayer(board);
+    var rowNum = board.updateBoard(colNum);
+    if(rowNum === 5){
+      $(this).hide();
+    }
+    colorBoard(board, colNum, rowNum);
+    if(!checkForWin(board, colNum, rowNum)){
+      board.changeTurn();
+      showActivePlayer(board);
+    } else {
+      alert("WINNER! " + board.players[board.turn].name);
+      $(".col-choice").hide();
+      $("#play-mode").fadeIn("slow");
+    }
   });
 });
 
-function colorBoard(board, col){
-  var boardArr = board.board;
-  for(var row=5; row>=0; row--){
-    var entry = boardArr[row][col];
-    if(entry === board.turn){
-      var classToAdd = "p" + (entry+1);
-      $("#"+row+" ." +col).addClass(classToAdd);
-      break;
-    }
+function checkForWin(board, col, row){
+  var win = false;
+  if(board.checkWinHorz(row) || board.checkWinVert(col)){
+    win = true;
   }
+  if(board.movesLeft === 0 && !win){
+    // TODO make prettier display
+    alert("Stalemate! Game Over.")
+  }
+  return win;
+}
+
+function colorBoard(board, col, row){
+  var classToAdd = "p" + (board.turn+1);
+  $("#"+row+" ." +col).addClass(classToAdd);
 }
 
 function makePlayer(board){

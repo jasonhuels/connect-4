@@ -1,5 +1,5 @@
 .row {
-  width: 80%;
+  width: 100%;
   height: 100px;
 }
 
@@ -43,9 +43,18 @@
   color: grey;
 
 }
+#playArea {
+  display: flex;
+  align-items: center;
+}
 
 #board {
-  display: none;
+  display: block;
+  margin: 0 10%;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
 }
 
 #p2 {
@@ -56,4 +65,17 @@
   font-size: 25px;
   font-weight: bold;
   text-decoration: overline underline;
+}
+
+#quit {
+  padding: 20px 0;
+}
+
+#rage {
+  display: block;
+  padding: 20px 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  background-color: red;
 }
