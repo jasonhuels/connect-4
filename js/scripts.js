@@ -6,6 +6,17 @@ function Player(inputName) {
   this.isAI = false
 }
 
+Player.prototype.chooseRandom = function(board) {
+  var choice;
+  while(!choice){
+    choice = Math.floor(Math.random()*7);
+    if(board.board[5][choice] === 1 || board.board[5][choice] === 1){
+      choice = "";
+    }
+  }
+  return choice;
+}
+
 //////////// Board Object ////////////////
 function Board() {
   this.players = [],
@@ -72,6 +83,8 @@ Board.prototype.checkWinHorz = function(row){
           playerNum = this.board[row][col];
           count = 1;
         }
+      } else {
+        count = 0;
       }
       if(count === 4){
         win = true;
@@ -119,7 +132,6 @@ Board.prototype.checkWinDiag = function(x, y){
       arrayDiagNeg.push([col,newRowNeg]);
     }
   }
-  console.log("Arrays", arrayDiagNeg, arrayDiagPos);
   if(arrayDiagPos.length >= 4 ){
     countPos = checkBoardCoord(this, arrayDiagPos);
   }
@@ -130,7 +142,7 @@ Board.prototype.checkWinDiag = function(x, y){
   if(countNeg >= 4 || countPos >= 4){
     win = true;
   }
-  console.log("Returned val: " + win);
+
   return win;
 }
 
@@ -142,7 +154,6 @@ function checkBoardCoord(board, arrayToCheck){
     var content = board.board[checkY][checkX];
     if(content === board.turn){
       count++;
-      console.log(count, checkX, checkY);
     }
     else {
       count = 0;
@@ -168,10 +179,8 @@ function checkBoardCoord(board, arrayToCheck){
 //     }
 //   }
 //
-//   console.log("line1.length= " + line1.length);
 //   if(line1.length >= 4) {
 //     for(let i=0; i<line1.length; i++) {
-//       console.log("i = " + i, "this.turn = " + this.turn);
 //       if(line[i] === this.turn) {
 //         count++;
 //       } else {
@@ -179,7 +188,6 @@ function checkBoardCoord(board, arrayToCheck){
 //       }
 //     }
 //   }
-//   console.log("pos slope count " + count);
 //
 //   for(let i=-3; i<=3; i++) {
 //     if(this.board[x+i]) {
@@ -191,10 +199,8 @@ function checkBoardCoord(board, arrayToCheck){
 //   }
 //
 //   count = 0;
-//   console.log("line2.length= " + line2.length);
 //   if(line2.length >= 4) {
 //     for(let i=0; i<line2.length; i++) {
-//       console.log("i = " + i, "this.turn = " + this.turn);
 //       if(line2[i] === this.turn) {
 //         count++;
 //       } else {
@@ -202,10 +208,6 @@ function checkBoardCoord(board, arrayToCheck){
 //       }
 //     }
 //   }
-//
-//   console.log("line1 " + line1);
-//   console.log("line2 " + line2);
-//   console.log("neg slope count " + count);
 // }
 
 Board.prototype.changeTurn = function(){
@@ -235,29 +237,38 @@ $(document).ready(function(){
     $("#playArea").fadeIn("slow");
   });
 
+  $("#p-v-c").click(function() {
+    var colNum = 0;
+
+    board.players = [];
+    makePlayer(board);
+    var cpu = new Player("CPU");
+    cpu.isAI = true;
+    board.players.push(cpu);
+    $("#p1-type").text(board.players[0].name);
+    $("#p2-type").text(board.players[1].name);
+
+    resetPlay(board);
+    $("#play-mode").fadeOut("slow");
+    $("#scores").fadeIn("slow");
+    $("#playArea").fadeIn("slow");
+
+    if(board.turn === 1) {
+      colNum = cpu.chooseRandom(board);
+      playTurn(board, colNum);
+    }
+  });
+
   $(".col-choice").click(function(){
     //var locations = ["zero", "one", "two", "three", "four", "five", "six"];
     var colNum = parseInt($(this).parent().attr("class").split(" ")[1]);
     //var colNum = locations.indexOf(colString);
-    var rowNum = board.updateBoard(colNum);
-    if(rowNum === 5){
-      $(this).hide();
-    }
-  //  colorBoard(board, colNum, rowNum);
-    cleanUpFlash(board, colNum);
-    colorFlash(board, colNum, rowNum);
+    playTurn(board, colNum);
 
-    if(!checkForWin(board, colNum, rowNum)){
-      board.changeTurn();
-      showActivePlayer(board);
-    } else {
-      $("#p1-score").text(board.players[0].score);
-      $("#p2-score").text(board.players[1].score);
-      alert("WINNER! " + board.players[board.turn].name);
-      $(".col-choice").hide();
-      $("#rematch").show();
-      $("#rage").hide();
-      $("#play-mode").fadeIn("slow");
+    if(board.players[1].isAI && board.turn === 1) {
+      var thinkTime = (Math.floor(Math.random()*4)+2)*1000;
+      colNum = board.players[1].chooseRandom(board);
+      setTimeout(playTurn, thinkTime, board, colNum);
     }
   });
 
@@ -273,8 +284,36 @@ $(document).ready(function(){
     $("#rematch").hide();
     $("#play-mode").fadeOut("slow");
     $("#rage").show();
+
+    if(board.players[1].isAI && board.turn === 1) {
+      colNum = board.players[1].chooseRandom(board);
+      playTurn(board, colNum);
+    }
   });
 });
+
+function playTurn(board, colNum) {
+  var rowNum = board.updateBoard(colNum);
+  if(rowNum === 5){
+    $(this).hide();
+  }
+//  colorBoard(board, colNum, rowNum);
+  cleanUpFlash(board, colNum);
+  colorFlash(board, colNum, rowNum);
+
+  if(!checkForWin(board, colNum, rowNum)){
+    board.changeTurn();
+    showActivePlayer(board);
+  } else {
+    $("#p1-score").text(board.players[0].score);
+    $("#p2-score").text(board.players[1].score);
+    alert("WINNER! " + board.players[board.turn].name);
+    $(".col-choice").hide();
+    $("#rematch").show();
+    $("#rage").hide();
+    $("#play-mode").fadeIn("slow");
+  }
+}
 
 function resetPlay(board){
   $(".col-choice").show();
@@ -307,23 +346,17 @@ function colorBoard(board, col, row){
 
 function dropChip(board, col, row) {
   var classToAdd = "f" + (board.turn+1);
-  console.log($("#" + row + " ." +col));
   $("#" + row + " ." +col).css("animation-duration", (6-row) + "s");
   $("#" + row + " ." +col).addClass(classToAdd);
 }
 
 function colorFlash(board, col, row){
   for(var i = 5; i >= row; i--){
-    // var now = new Date().valueOf();
-    // colorBoard(board, col, i);
-
     if(i === row){
       colorBoard(board, col, i);
     } else {
       dropChip(board, col, i);
     }
-    // console.log(new Date().valueOf() - now);
-    console.log("location: " + col + ", " + row);
   }
 }
 
