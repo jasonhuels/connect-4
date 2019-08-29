@@ -19,7 +19,7 @@ Player.prototype.chooseRandom = function(board) {
 
 Player.prototype.chooseBetter = function(board) {
   var move = 0;
-  var potentialMove = checkHorz(board);
+  var potentialMove = checks(board);
 
   if(potentialMove.length) {
     move = potentialMove[Math.floor(Math.random()*potentialMove.length)];
@@ -29,7 +29,7 @@ Player.prototype.chooseBetter = function(board) {
   return move;
 }
 
-function checkHorz(board) {
+function checks(board) {
   var potentialMove = [];
   var arrayEmptyCount = 0;
   var sideToSideValue = 0;
@@ -38,20 +38,23 @@ function checkHorz(board) {
     arrayEmptyCount = board.board[i].length - board.board[i].filter(Number).length;
     if(arrayEmptyCount !== 7) {
       for(let j=0; j<=6; j++) {
-        if(i !== 0 && (board.board[i-1][j] !== 1 && board.board[i-1][j] !== 0)){
-          validToCheck = false;
-        } else {
-          validToCheck = true;
-        }
+        // if(i === 0 || (board.board[i-1][j] !== 1 && board.board[i-1][j] !== 0)){
+        //   validToCheck = false;
+        // } else {
+        //   validToCheck = true;
+        //   console.log("Valid to check (content underneath): " + i + ", " + j);
+        // }
         if(board.board[i][j] !== 0 && board.board[i][j] !== 1) {
           if(j<6) {
-            if((board.board[i][j+1] === 0 || board.board[i][j+1] === 1) && validToCheck) {
+            if((board.board[i][j+1] === 0 || board.board[i][j+1] === 1)) {
+              console.log("Entered horizontal check to right: " + i + ", " + j);
               sideToSideValue = board.board[i][j+1];
               potentialMove.push(j);
             }
           }
           if(j>0) {
-            if((board.board[i][j-1] === 0 || board.board[i][j-1] === 1) && validToCheck) {
+            if((board.board[i][j-1] === 0 || board.board[i][j-1] === 1)) {
+              console.log("Entered horizontal check to left: " + i + ", " + j);
               if(sideToSideValue === board.board[i][j-1] || sideToSideValue === -1){
                 potentialMove.push(j);
               }
@@ -63,6 +66,7 @@ function checkHorz(board) {
     }
     for(let j=0; j<=6; j++) {
       if(i > 1 && (board.board[5][j] !== 1 && board.board[5][j] !== 0) && (board.board[i+1][j] !== 1 && board.board[i+1][j] !== 0)) {
+        console.log("Entered vertical check: " + i + ", " + j);
         if(board.board[i-1][j] === board.board[i-2][j] && (board.board[i-1][j] === 0 || board.board[i-1][j] === 1)) {
           potentialMove.push(j); //Add weight to this column
           potentialMove.push(j); // It's a good move!
@@ -74,7 +78,7 @@ function checkHorz(board) {
   return potentialMove;
 }
 
-function checkVert(board) {
+function checkHorz(board) {
 
 }
 
