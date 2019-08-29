@@ -17,6 +17,47 @@ Player.prototype.chooseRandom = function(board) {
   return choice;
 }
 
+Player.prototype.chooseBetter = function(board) {
+  var move = 0;
+  var potentialMove = checkHorz(board);
+
+  if(potentialMove.length) {
+    move = potentialMove[Math.floor(Math.random()*potentialMove.length)];
+  } else {
+    move = this.chooseRandom(board);
+  }
+  return move;
+}
+
+function checkHorz(board) {
+  var potentialMove = [];
+  for(let i=0; i<=5; i++) {
+    if(board.board[i]) {
+      for(let j=0; j<=6; j++) {
+        if(board.board[i][j] !== 0 && board.board[i][j] !== 1) {
+          if(j<6) {
+            if(board.board[i][j+1] === 0 || board.board[i][j+1] === 1) {
+              potentialMove.push(j);
+            }
+          }
+          if(j>0) {
+            if(board.board[i][j-1] === 0 || board.board[i][j-1] === 1) {
+              potentialMove.push(j);
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  return potentialMove;
+}
+
+function checkVert(board) {
+
+}
+
 //////////// Board Object ////////////////
 function Board() {
   this.players = [],
@@ -254,7 +295,7 @@ $(document).ready(function(){
     $("#playArea").fadeIn("slow");
 
     if(board.turn === 1) {
-      colNum = cpu.chooseRandom(board);
+      colNum = cpu.chooseBetter(board);
       playTurn(board, colNum);
     }
   });
@@ -267,7 +308,7 @@ $(document).ready(function(){
 
     if(board.players[1].isAI && board.turn === 1) {
       var thinkTime = (Math.floor(Math.random()*4)+2)*1000;
-      colNum = board.players[1].chooseRandom(board);
+      colNum = board.players[1].chooseBetter(board);
       setTimeout(playTurn, thinkTime, board, colNum);
     }
   });
@@ -286,7 +327,7 @@ $(document).ready(function(){
     $("#rage").show();
 
     if(board.players[1].isAI && board.turn === 1) {
-      colNum = board.players[1].chooseRandom(board);
+      colNum = board.players[1].chooseBetter(board);
       playTurn(board, colNum);
     }
   });
