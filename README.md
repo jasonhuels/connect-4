@@ -2,7 +2,7 @@
 
 #### _Connect 4 Game, 28-Aug-2019_
 
-#### By _**Jason Huels and Christine Frank**_
+#### By _**Jason Huels, Christine Frank and Alan Hermanns**_
 
 ## Description
 
@@ -64,4 +64,4 @@ _{Tell me about the languages and tools you used to create this app. Assume that
 
 *{Determine the license under which this application can be used.  See below for more details on licensing.}*
 
-Copyright (c) 2016 **_{List of contributors or company name}_**
+Copyright (c) 2016 **_Jason Huels, Christine Frank and Alan Hermanns_**

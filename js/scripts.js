@@ -243,7 +243,10 @@ $(document).ready(function(){
     if(rowNum === 5){
       $(this).hide();
     }
-    colorBoard(board, colNum, rowNum);
+  //  colorBoard(board, colNum, rowNum);
+    cleanUpFlash(board, colNum);
+    colorFlash(board, colNum, rowNum);
+
     if(!checkForWin(board, colNum, rowNum)){
       board.changeTurn();
       showActivePlayer(board);
@@ -298,7 +301,35 @@ function checkForWin(board, col, row){
 
 function colorBoard(board, col, row){
   var classToAdd = "p" + (board.turn+1);
-  $("#"+row+" ." +col).addClass(classToAdd);
+  $("#" + row + " ." +col).css("animation-duration", (6-row) + "s");
+  $("#"+row+" ." +col).toggleClass(classToAdd);
+}
+
+function dropChip(board, col, row) {
+  var classToAdd = "f" + (board.turn+1);
+  console.log($("#" + row + " ." +col));
+  $("#" + row + " ." +col).css("animation-duration", (6-row) + "s");
+  $("#" + row + " ." +col).addClass(classToAdd);
+}
+
+function colorFlash(board, col, row){
+  for(var i = 5; i >= row; i--){
+    // var now = new Date().valueOf();
+    // colorBoard(board, col, i);
+
+    if(i === row){
+      colorBoard(board, col, i);
+    } else {
+      dropChip(board, col, i);
+    }
+    // console.log(new Date().valueOf() - now);
+    console.log("location: " + col + ", " + row);
+  }
+}
+
+function cleanUpFlash(board){
+  $(".col").removeClass("f1");
+  $(".col").removeClass("f2");
 }
 
 function makePlayer(board){
@@ -314,13 +345,13 @@ function makePlayer(board){
 function showActivePlayer(board) {
   if(board.turn === 0) {
     $("#p1").addClass("active");
-    $("#p1").addClass("p1");
+    $("#p1").addClass("b1");
     $("#p2").removeClass("active");
-    $("#p2").removeClass("p2");
+    $("#p2").removeClass("b2");
   } else {
     $("#p2").addClass("active");
-    $("#p2").addClass("p2");
+    $("#p2").addClass("b2");
     $("#p1").removeClass("active");
-    $("#p1").removeClass("p1");
+    $("#p1").removeClass("b1");
   }
 }
