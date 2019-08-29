@@ -31,26 +31,46 @@ Player.prototype.chooseBetter = function(board) {
 
 function checkHorz(board) {
   var potentialMove = [];
+  var arrayEmptyCount = 0;
+  var sideToSideValue = 0;
+  var validToCheck = true;
   for(let i=0; i<=5; i++) {
-    if(board.board[i]) {
+    arrayEmptyCount = board.board[i].length - board.board[i].filter(Number).length;
+    if(arrayEmptyCount !== 7) {
       for(let j=0; j<=6; j++) {
+        if(i !== 0 && (board.board[i-1][j] !== 1 && board.board[i-1][j] !== 0)){
+          validToCheck = false;
+        } else {
+          validToCheck = true;
+        }
         if(board.board[i][j] !== 0 && board.board[i][j] !== 1) {
           if(j<6) {
-            if(board.board[i][j+1] === 0 || board.board[i][j+1] === 1) {
+            if((board.board[i][j+1] === 0 || board.board[i][j+1] === 1) && validToCheck) {
+              sideToSideValue = board.board[i][j+1];
               potentialMove.push(j);
             }
           }
           if(j>0) {
-            if(board.board[i][j-1] === 0 || board.board[i][j-1] === 1) {
-              potentialMove.push(j);
+            if((board.board[i][j-1] === 0 || board.board[i][j-1] === 1) && validToCheck) {
+              if(sideToSideValue === board.board[i][j-1] || sideToSideValue === -1){
+                potentialMove.push(j);
+              }
             }
           }
+        }
+        sideToSideValue = -1;
+      }
+    }
+    for(let j=0; j<=6; j++) {
+      if(i > 1 && (board.board[5][j] !== 1 && board.board[5][j] !== 0) && (board.board[i+1][j] !== 1 && board.board[i+1][j] !== 0)) {
+        if(board.board[i-1][j] === board.board[i-2][j] && (board.board[i-1][j] === 0 || board.board[i-1][j] === 1)) {
+          potentialMove.push(j); //Add weight to this column
+          potentialMove.push(j); // It's a good move!
         }
       }
     }
   }
-
-
+  console.log(potentialMove);
   return potentialMove;
 }
 
@@ -301,21 +321,25 @@ $(document).ready(function(){
   });
 
   $(".col-choice").click(function(){
-    //var locations = ["zero", "one", "two", "three", "four", "five", "six"];
-    var colNum = parseInt($(this).parent().attr("class").split(" ")[1]);
-    //var colNum = locations.indexOf(colString);
-    playTurn(board, colNum);
+    if(!(board.players[1].isAI && board.turn === 1)){
+      var colNum = parseInt($(this).parent().attr("class").split(" ")[1]);
+      //var colNum = locations.indexOf(colString);
+      playTurn(board, colNum);
 
-    if(board.players[1].isAI && board.turn === 1) {
-      var thinkTime = (Math.floor(Math.random()*4)+2)*1000;
-      colNum = board.players[1].chooseBetter(board);
-      setTimeout(playTurn, thinkTime, board, colNum);
+      if(board.players[1].isAI && board.turn === 1) {
+        var thinkTime = (Math.floor(Math.random()*4)+2)*1000;
+        colNum = board.players[1].chooseBetter(board);
+        setTimeout(playTurn, thinkTime, board, colNum);
+      }
+    } else {
+      alert("Wait your turn!");
     }
   });
 
   $("#rage").click(function(){
     resetPlay(board);
     $("#playArea").hide();
+    $("#scores").hide();
     $("#play-mode").fadeIn("slow");
     board.players = [];
   });
@@ -324,7 +348,6 @@ $(document).ready(function(){
     resetPlay(board);
     $("#rematch").hide();
     $("#play-mode").fadeOut("slow");
-    $("#rage").show();
 
     if(board.players[1].isAI && board.turn === 1) {
       colNum = board.players[1].chooseBetter(board);
@@ -336,7 +359,7 @@ $(document).ready(function(){
 function playTurn(board, colNum) {
   var rowNum = board.updateBoard(colNum);
   if(rowNum === 5){
-    $(this).hide();
+    $("." + colNum + " button").hide();
   }
 //  colorBoard(board, colNum, rowNum);
   cleanUpFlash(board, colNum);
@@ -364,6 +387,7 @@ function resetPlay(board){
   showActivePlayer(board);
   $("#p1-score").text(board.players[0].score);
   $("#p2-score").text(board.players[1].score);
+  $("#rage").show();
 }
 
 function checkForWin(board, col, row){
@@ -374,7 +398,8 @@ function checkForWin(board, col, row){
   }
   if(board.movesLeft === 0 && !win){
     // TODO make prettier display
-    alert("Stalemate! Game Over.")
+    alert("Stalemate! Game Over.");
+    win = true;
   }
   return win;
 }
