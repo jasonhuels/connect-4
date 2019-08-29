@@ -99,88 +99,114 @@ Board.prototype.checkWinHorz = function(row){
   y2 -> [0-6] keep
 
 */
-// Board.prototype.checkWinDiag = function(x, y){
-//   var arrayDiagPos = [];
-//   var arrayDiagNeg = [];
-//   var countPos = 0;
-//   var countNeg = 0;
-//   var win = false;
-//
-//   var a = y - x;
-//   var b = y + x;
-//
-//   for(var col = 0; col <=6; col++){
-//     var newRowPos = col + a;
-//     var newRowNeg = -col + b;
-//     if(newRowPos <=5 && newRowPos >= 0){
-//       arrayDiagPos.push([col,newRowPos]);
-//     }
-//     if(newRowNeg <=5 && newRowNeg >= 0){
-//       arrayDiagNeg.push([col,newRowNeg]);
-//     }
-//   }
-//   console.log("Arrays", arrayDiagNeg, arrayDiagPos);
-//   if(arrayDiagPos.length >= 4 ){
-//     countPos = checkBoardCoord(this, arrayDiagPos);
-//   }
-//
-//   if(arrayDiagNeg.length >= 4 ){
-//     countNeg = checkBoardCoord(this, arrayDiagNeg);
-//   }
-//   if(countNeg >= 4 || countPos >= 4){
-//     win = true;
-//   }
-//   console.log("Returned val: " + win);
-//   return win;
-// }
-//
-// function checkBoardCoord(board, arrayToCheck){
+Board.prototype.checkWinDiag = function(x, y){
+  var arrayDiagPos = [];
+  var arrayDiagNeg = [];
+  var countPos = 0;
+  var countNeg = 0;
+  var win = false;
+
+  var a = y - x;
+  var b = y + x;
+
+  for(var col = 0; col <=6; col++){
+    var newRowPos = col + a;
+    var newRowNeg = -col + b;
+    if(newRowPos <=5 && newRowPos >= 0){
+      arrayDiagPos.push([col,newRowPos]);
+    }
+    if(newRowNeg <=5 && newRowNeg >= 0){
+      arrayDiagNeg.push([col,newRowNeg]);
+    }
+  }
+  console.log("Arrays", arrayDiagNeg, arrayDiagPos);
+  if(arrayDiagPos.length >= 4 ){
+    countPos = checkBoardCoord(this, arrayDiagPos);
+  }
+
+  if(arrayDiagNeg.length >= 4 ){
+    countNeg = checkBoardCoord(this, arrayDiagNeg);
+  }
+  if(countNeg >= 4 || countPos >= 4){
+    win = true;
+  }
+  console.log("Returned val: " + win);
+  return win;
+}
+
+function checkBoardCoord(board, arrayToCheck){
+  var count = 0;
+  for(var i = 0; i < arrayToCheck.length; i++){
+    var checkX = arrayToCheck[i][0];
+    var checkY = arrayToCheck[i][1];
+    var content = board.board[checkY][checkX];
+    if(content === board.turn){
+      count++;
+      console.log(count, checkX, checkY);
+    }
+    else {
+      count = 0;
+    }
+    if(count === 4){
+      break;
+    }
+  }
+  return count;
+}
+
+//////////// Lamens Version
+// Board.prototype.checkWinDiag = function(y, x) {
+//   var line1 = [];
+//   var line2 = [];
 //   var count = 0;
-//   for(var i = 0; i < arrayToCheck.length; i++){
-//     var checkX = arrayToCheck[i][0];
-//     var checkY = arrayToCheck[i][1];
-//     var content = board.board[checkY][checkX];
-//     //if(content === 0 || content === 1){
-//       if(content === board.turn){
-//         count++;
-//         console.log(count, checkX, checkY);
+//
+//   for(let i=-3; i<=3; i++) {
+//     if(this.board[x+i]) {
+//       if(this.board[x+i][y+i] == 0 || this.board[x+i][y+i] == 1) {
+//         line1.push(this.board[x+i][y+i]);
 //       }
-//       else {
+//     }
+//   }
+//
+//   console.log("line1.length= " + line1.length);
+//   if(line1.length >= 4) {
+//     for(let i=0; i<line1.length; i++) {
+//       console.log("i = " + i, "this.turn = " + this.turn);
+//       if(line[i] === this.turn) {
+//         count++;
+//       } else {
 //         count = 0;
 //       }
-//     //}
+//     }
 //   }
-//   return count;
+//   console.log("pos slope count " + count);
+//
+//   for(let i=-3; i<=3; i++) {
+//     if(this.board[x+i]) {
+//       j = -i;
+//       if(this.board[x+i][y+j] == 0 || this.board[x+i][y+j] == 1) {
+//         line2.push(this.board[x+i][y+j]);
+//       }
+//     }
+//   }
+//
+//   count = 0;
+//   console.log("line2.length= " + line2.length);
+//   if(line2.length >= 4) {
+//     for(let i=0; i<line2.length; i++) {
+//       console.log("i = " + i, "this.turn = " + this.turn);
+//       if(line2[i] === this.turn) {
+//         count++;
+//       } else {
+//         count = 0;
+//       }
+//     }
+//   }
+//
+//   console.log("line1 " + line1);
+//   console.log("line2 " + line2);
+//   console.log("neg slope count " + count);
 // }
-Board.prototype.checkWinDiag = function(y, x) {
-  // var line1 = [[x+3, y+3], [x+2, y+2], [x+1, y+1], [x, y], [x-1, y-1], [x-2, y-2], [x-3, x-3]];
-  // var line2 = [[x+3, y-3], [x+2, y-2], [x+1, y-1], [x, y], [x+1, y-1], [x+2, y-2], [x+1, x-1]];
-  var line1 = [];
-  var line2 = [];
-  var count = 0;
-  console.log(this.board[x][y]);
-
-  for(let i=-3; i<=3; i++) {
-    if(this.board[x+i]) {
-      if(this.board[x+i][y+i] == 0 || this.board[x+i][y+i] == 1) {
-        line1.push(this.board[x+i][y+i]);
-      }
-    }
-  }
-
-  if(line1.length >= 4) {
-    for(let i=0; i<line1.length; i++) {
-      if(i === this.turn) {
-        count++;
-      } else {
-        count = 0;
-      }
-    }
-  }
-
-  console.log(line1);
-  console.log(count);
-}
 
 Board.prototype.changeTurn = function(){
   if(this.turn === 0){
@@ -243,6 +269,7 @@ $(document).ready(function(){
     resetPlay(board);
     $("#rematch").hide();
     $("#play-mode").fadeOut("slow");
+    $("#rage").show();
   });
 });
 
